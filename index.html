@@ -3,18 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Called to Speak: What's holding your voice back?</title>
+<title>What's holding your voice back? Free voice quiz</title>
+<meta name="description" content="">
+<meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap">
-<link rel="stylesheet" href="assets/cts.css">
-<script src="config.js"></script>
-<script src="assets/cts.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Relative paths only, so it runs from a GitHub Pages project subpath, a GHL file, or file:// -->
+<link rel="stylesheet" href="funnel.css">
+<script>
+/* Local previews must not fire the live pixel, GA4 or Clarity. ?track=1 forces tracking on. */
+window.FUNNEL_NO_TRACK = /^(localhost|127\.0\.0\.1|)$/.test(location.hostname) && !/[?&]track=1/.test(location.search);
+</script>
+<!-- ============ TRACKING (inert until an id is set in funnel.config.js; leave the blocks in place) ============ -->
+<script src="funnel.config.js"></script>
+<script>
+(function () {
+  if (window.FUNNEL_NO_TRACK) { console.info('[funnel] local preview: tracking disabled'); return; }
+  var t = (window.FUNNEL || {}).tracking || {};
+  if (t.gtm) {
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':+new Date(),event:'gtm.js'});
+    var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;
+    j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer',t.gtm);
+  }
+  var gaId = t.ga4 || (t.googleAds && t.googleAds.id) || '';
+  if (gaId) {
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId; document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag('js', new Date());
+    if (t.ga4) gtag('config', t.ga4);
+    if (t.googleAds && t.googleAds.id) gtag('config', t.googleAds.id);
+  }
+  if (t.metaPixel) {
+    !function(f,b,e,v,n,t2,s2){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t2=b.createElement(e);t2.async=!0;
+    t2.src=v;s2=b.getElementsByTagName(e)[0];s2.parentNode.insertBefore(t2,s2)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', t.metaPixel); fbq('track', 'PageView');
+  }
+  if (t.clarity) {
+    (function(c,l,a,r,i,t3,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t3=l.createElement(r);t3.async=1;t3.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t3,y);
+    })(window,document,"clarity","script",t.clarity);
+  }
+})();
+(function () {
+  var b = (window.FUNNEL || {}).brand || {};
+  if (b.title) document.title = b.title;
+  if (b.description) { var m = document.querySelector('meta[name=description]'); if (m) m.setAttribute('content', b.description); }
+})();
+</script>
 </head>
-<body class="shell">
-<header class="hdr line"><div class="wrap"><span class="brand">Called to Speak</span><span class="note" id="hdrNote">Free voice quiz</span></div></header>
-<main id="app" aria-live="polite"></main>
-<script src="assets/quiz.js" defer></script>
+<body>
+
+<div class="topbar"><div class="wrap"><span class="name">Called to Speak</span><span class="note" id="topNote">Free voice quiz</span></div></div>
+
+<header class="hero" id="top">
+  <div class="hero-grid">
+    <p class="eyebrow" id="heroKicker"></p>
+    <h1 id="heroH1">What's holding your <em>voice</em> back?</h1>
+    <p class="hook" id="heroHook"></p>
+    <div class="quiz-card">
+      <div id="heroHead"><p class="introNote" id="introNote"></p></div>
+      <section id="quiz" class="quiz" aria-label="Voice quiz questions"></section>
+    </div>
+    <div class="verse"><q id="verseText"></q><p class="eyebrow" id="verseRef"></p></div>
+    <p class="qual" id="heroQual"></p>
+    <figure class="by" id="by"><blockquote id="byQuote"></blockquote><figcaption id="byWho"></figcaption></figure>
+  </div>
+</header>
+
+<div id="sections"></div>
+
+<div id="resView" hidden aria-live="polite"></div>
+<div class="wrap" style="text-align:center"><button type="button" class="retake" id="retake" hidden>Retake the quiz</button></div>
+
+<footer class="foot"><div class="wrap">
+  <p>Earnings disclaimer: Results described are Meghan's and her clients' and are not typical. This program is coaching and mentorship, not therapy.</p>
+  <p>&copy; 2026 Meghan Kristine, LLC. <a href="https://apricity.myflodesk.com/tnc">Terms and Conditions</a> <a id="privacyLink" hidden>Privacy Policy</a></p>
+</div></footer>
+
+<script src="funnel.js"></script>
+<script>
+/* Presentation only: hero copy and section rendering from the config. */
+(function () {
+  var CFG = window.FUNNEL, host = document.getElementById('sections');
+  if (!CFG) return;
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+  function text(id, v) { var n = document.getElementById(id); if (n && v) n.textContent = v; }
+  text('introNote', CFG.quiz.intro); text('heroKicker', CFG.kicker); text('heroHook', CFG.hook); text('heroQual', CFG.qualifier);
+  if (CFG.verse) { text('verseText', CFG.verse.text); text('verseRef', CFG.verse.ref); }
+  if (CFG.byline) { text('byQuote', '"' + CFG.byline.quote + '"'); text('byWho', CFG.byline.by); }
+  var pu = (CFG.pages || {}).privacyUrl; if (pu) { var a = document.getElementById('privacyLink'); a.href = pu; a.hidden = false; }
+
+  var build = {
+    covers: function (s) {
+      return '<section class="sec off"><div class="inner"><h2 class="sec-h">' + esc(s.title) + '</h2><div class="grid">' +
+        (s.items || []).map(function (i, n) { return '<div class="cell"><span class="num">0' + (n + 1) + '</span><h3>' + esc(i.title) + '</h3><p>' + esc(i.body) + '</p></div>'; }).join('') + '</div></div></section>';
+    },
+    proof: function (s) {
+      if (!(s.items || []).length) return '';
+      return '<section class="sec"><div class="inner"><h2 class="sec-h">' + esc(s.title) + '</h2><div class="grid">' +
+        s.items.map(function (i) { return '<figure class="cell quote-cell" style="margin:0"><blockquote>"' + esc(i.quote) + '"</blockquote><figcaption>' + esc(i.who) + '</figcaption></figure>'; }).join('') + '</div></div></section>';
+    },
+    faq: function (s) {
+      return '<section class="sec off"><div class="inner narrow"><h2 class="sec-h">' + esc(s.title) + '</h2>' +
+        (s.items || []).map(function (i) { return '<details class="faq"><summary>' + esc(i.q) + '</summary><p>' + esc(i.a) + '</p></details>'; }).join('') + '</div></section>';
+    },
+    finalcta: function (s) {
+      return '<section class="final"><div class="inner narrow"><h2>' + esc(s.title) + '</h2><p>' + esc(s.body) + '</p><button class="cta" type="button" data-scroll="quiz">' + esc(s.cta) + '</button></div></section>';
+    }
+  };
+  host.innerHTML = (CFG.sections || []).map(function (s) { return build[s.type] ? build[s.type](s) : ''; }).join('');
+  host.querySelectorAll('[data-scroll="quiz"]').forEach(function (b) {
+    b.addEventListener('click', function () { document.getElementById('top').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  });
+})();
+</script>
 </body>
 </html>

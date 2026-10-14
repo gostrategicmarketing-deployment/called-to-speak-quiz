@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="../assets/cts.css">
-<script src="../config.js"></script>
+<script src="../funnel.config.js"></script>
+<script>window.CTS_CONFIG=Object.assign({pixelId:(FUNNEL.tracking||{}).metaPixel||""},FUNNEL.pages||{});</script>
 <script src="../assets/cts.js" defer></script>
 </head>
 <body class="light">
@@ -49,6 +50,6 @@
 </div></section>
 
 <footer class="foot"><div class="wrap"><p>Earnings disclaimer: Results described are Meghan's and her clients' and are not typical. This program is coaching and mentorship, not therapy.</p><p>&copy; 2026 Meghan Kristine, LLC. <a href="https://apricity.myflodesk.com/tnc">Terms and Conditions</a> <a data-privacy hidden>Privacy Policy</a></p></div></footer>
-<script>document.addEventListener('DOMContentLoaded',function(){var C=window.CTS,s=C.store.get('cts_quiz')||{},who={first_name:C.qs('first_name')||s.first_name||'',last_name:C.qs('last_name')||'',email:C.qs('email')||s.email||'',phone:C.qs('phone')||s.phone||''};if(s.type_name){var t=document.getElementById('typeLine');t.textContent='Your voice type: '+s.type_name;t.hidden=false;}C.mountCalendar(document.getElementById('cal'),who);C.track('QuizBookView',{},true);});</script>
+<script>document.addEventListener('DOMContentLoaded',function(){var C=window.CTS,s=C.store.get('cts_quiz')||{},who={first_name:C.qs('first_name')||s.first_name||'',last_name:C.qs('last_name')||s.last_name||'',email:C.qs('email')||s.email||'',phone:C.qs('phone')||s.phone||''};if(s.type_name){var t=document.getElementById('typeLine');t.textContent='Your voice type: '+s.type_name;t.hidden=false;}C.mountCalendar(document.getElementById('cal'),who);C.track('QuizBookView',{},true);});</script>
 </body>
 </html>
